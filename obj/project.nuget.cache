@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "um54Way1xkH1nOUejq6bFSRWm1hC9Tb9Zxd59rk7KsY0eWVKRD2RVED8PooHPKqO+qxWxShX6+APeBDG+hu5Ng==",
+  "success": true,
+  "projectFilePath": "D:\\Progs\\VisualStudio\\C#\\Snakedy\\Snakedy\\Snakedy.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ilya1\\.nuget\\packages\\monogame.content.builder.task\\3.8.1.303\\monogame.content.builder.task.3.8.1.303.nupkg.sha512",
+    "C:\\Users\\ilya1\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512"
+  ],
+  "logs": []
+}
