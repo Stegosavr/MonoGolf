@@ -23,3 +23,9 @@ D:\Progs\VisualStudio\C#\Snakedy\Snakedy\obj\Debug\net6.0\refint\Snakedy.dll
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\obj\Debug\net6.0\Snakedy.pdb
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\obj\Debug\net6.0\Snakedy.genruntimeconfig.cache
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\obj\Debug\net6.0\ref\Snakedy.dll
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\ball.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\green.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\xp.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\MonoGame.Extended.dll
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\MonoGame.Extended.Collisions.dll
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Newtonsoft.Json.dll
