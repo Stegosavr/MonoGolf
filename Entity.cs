@@ -29,7 +29,7 @@ namespace Snakedy
 
         public void OnCollision(CollisionEventArgs collisionInfo)
         {
-            Console.WriteLine("Collided");
+            //Console.WriteLine("Collided");
         }
 
     }

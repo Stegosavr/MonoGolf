@@ -9,7 +9,7 @@ using MonoGame.Extended;
 
 namespace Snakedy
 {
-    internal class Hole
+    public class Hole
     {
         public Vector2 Position;
 

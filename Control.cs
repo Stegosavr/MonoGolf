@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Snakedy
 {
-    internal class Control
+    public class Control
     {
         //Vector2 objectPos;
         //float objectSpeed;
@@ -44,6 +44,8 @@ namespace Snakedy
             var mState = Mouse.GetState();
             var holdind = false;
 
+            //if (Mouse.)
+
             if (mState.LeftButton == ButtonState.Pressed)
             {
                 holdind = true;
@@ -58,8 +60,10 @@ namespace Snakedy
             return holdind;
         }
 
-        public Vector2 StayInBounds(Vector2 objectPos,Vector2 bounds)
+        public Vector2 StayInBounds(Vector2 objectPos, Vector2 bounds,Character ball = null)
         {
+            //if (ball != null)
+            //    ball.CalculateCollision;
             if (objectPos.X < 0)
             {
                 objectPos.X = 0;
