@@ -30,3 +30,4 @@ D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\MonoGame.Extended.dll
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\MonoGame.Extended.Collisions.dll
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Newtonsoft.Json.dll
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sounds\hit.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\arrow.xnb

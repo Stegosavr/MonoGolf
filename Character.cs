@@ -27,6 +27,7 @@ namespace Snakedy
         Vector2 HitDirection;
         float MinSpeed = 0.01f;
 
+        bool Moving = false;
         bool Collided = false;
         public bool Holding = false;
 
@@ -34,7 +35,7 @@ namespace Snakedy
         public ICollisionActor CollidedWith { get; private set; }
         public double CollidedTo { get; private set; }
 
-        public Character(Vector2 position, float hitForce = 0.01f,float collisionSize = 20f)
+        public Character(Vector2 position, float hitForce = 0.008f,float collisionSize = 20f)
         {
             Position = position;
             HitForce = hitForce;
@@ -50,7 +51,10 @@ namespace Snakedy
             if (Velocity > MinSpeed)
                 Velocity -= MinSpeed;
             else if (Velocity > 0)
+            {
                 Velocity = 0;
+                Moving = false;
+            }
 
             Bounds.Position = Position;
 
@@ -61,6 +65,7 @@ namespace Snakedy
 
         public void PreparingHit(bool pressed) 
         {
+            if (Moving) return;
             if (pressed)
                 HitCalculating(true);
             if (Holding = true && pressed == false)
@@ -73,8 +78,8 @@ namespace Snakedy
             if (prepare)
             {
                 var mousePos = Mouse.GetState().Position.ToVector2();
-                HitDirection = Position - mousePos;
-                //Console.WriteLine(HitDirection);
+                HitDirection = Functions.LimitHitVector(mousePos,Position,300);
+                //HitDirection = Position - mousePos;
             }
             else if (HitDirection != Vector2.Zero)
             {
@@ -83,6 +88,7 @@ namespace Snakedy
                 HitDirection = Vector2.Zero;
                 CollidedWith = null;
 
+                Moving = true;
                 HitSound.Play();
             }
         }
@@ -96,8 +102,9 @@ namespace Snakedy
             }
             else
             {
-                Vector2 dir = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle));
-                Position += dir;
+                Vector2 dir = new Vector2((float)Math.Cos(CollidedTo), (float)Math.Sin(CollidedTo));
+                Position += dir*10;
+                //Console.WriteLine('Same collision');
             }
         }
 
@@ -105,7 +112,7 @@ namespace Snakedy
         {
             var n = collisionInfo.PenetrationVector;
             var surface = new Vector2(n.Y, -n.X);
-            Console.WriteLine("surface:"+surface.ToString() + " ");
+            //Console.WriteLine("ANGLE:"+Angle.ToString() + " ");
             var surfAngle = (Math.Atan2(surface.Y, surface.X) + Math.PI) % Math.PI;
             Angle = surfAngle + surfAngle - Angle;
             CollidedTo = Angle;
@@ -115,7 +122,7 @@ namespace Snakedy
         {
             spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Red, 3f);
             if (Holding)
-                Effects.DrawArrow(Mouse.GetState().Position.ToVector2(), Position);
+                Effects.DrawArrow(HitDirection, Position);
         }
     }
 }

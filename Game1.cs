@@ -19,6 +19,8 @@ namespace Snakedy
 
         Hole Hole;
 
+        int Score;
+
         public readonly Random Random = new Random(Guid.NewGuid().GetHashCode());
 
         Texture2D Wallpaper;
@@ -42,7 +44,8 @@ namespace Snakedy
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
 
-            _collisionComponent = new CollisionComponent(new RectangleF(0, 0, screenWidth, screenHeight));
+            //_collisionComponent = new CollisionComponent(new RectangleF(0, 0, screenWidth, screenHeight));
+            _collisionComponent = new CollisionComponent(new RectangleF(0-100, 0-100, screenWidth+100, screenHeight+100));
 
 
             Content.RootDirectory = "Content";
@@ -77,6 +80,7 @@ namespace Snakedy
             Ball.Texture = Content.Load<Texture2D>("Sprites/ball");
             Wallpaper = Content.Load<Texture2D>("Sprites/green");
             Wallpaper2 = Content.Load<Texture2D>("Sprites/xp");
+            Effects.ArrowTexture = Content.Load<Texture2D>("Sprites/arrow");
 
             soundEffect = Content.Load<SoundEffect>("Sounds/hit");
             Ball.HitSound = soundEffect;
@@ -101,7 +105,10 @@ namespace Snakedy
 
 
             if (Hole.Check(Ball.Position))
+            {
                 SpawnHole();
+                Console.WriteLine("Score: " + ++Score);
+            }
 
             _collisionComponent.Update(gameTime);
 
@@ -118,7 +125,7 @@ namespace Snakedy
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(Wallpaper, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
-            _spriteBatch.Draw(Ball.Texture, OffsetTexture(Ball.Texture, Ball.Position), Color.White);
+            _spriteBatch.Draw(Ball.Texture, Functions.OffsetTexture(Ball.Texture, Ball.Position), Color.White);
 
             Ball.Draw(_spriteBatch);
             Hole.Draw(_spriteBatch);
@@ -127,6 +134,7 @@ namespace Snakedy
             foreach (var b in Borders)
                 b.Draw(_spriteBatch);
 
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -134,11 +142,13 @@ namespace Snakedy
 
         void SetBoundsCollisions(CollisionComponent comp)
         {
+            int size = 100;
+            int shift = 5;
             Borders = new Border[4];
-            Borders[0] = (new Border(this, new RectangleF(0, 0, screenWidth, 10)));
-            Borders[1] = (new Border(this, new RectangleF(0, screenHeight-10, screenWidth, 10)));
-            Borders[2] = (new Border(this, new RectangleF(0, 0, 10, screenHeight)));
-            Borders[3] = (new Border(this, new RectangleF(screenWidth-10, 0, 10, screenHeight)));
+            Borders[0] = (new Border(this, new RectangleF(0, -size+ shift, screenWidth, size)));
+            Borders[1] = (new Border(this, new RectangleF(0, screenHeight- shift, screenWidth, size)));
+            Borders[2] = (new Border(this, new RectangleF(-size+ shift, 0, size, screenHeight)));
+            Borders[3] = (new Border(this, new RectangleF(screenWidth- shift, 0, size, screenHeight)));
             foreach (var b in Borders)
                 comp.Insert(b);
         }
@@ -148,10 +158,5 @@ namespace Snakedy
             var hol = new Hole(new Vector2(Random.Next(0, screenWidth), Random.Next(0, screenHeight)));
             Hole = hol;
         }
-
-        protected Vector2 OffsetTexture(Texture2D texture, Vector2 position) =>
-            new Vector2(position.X - texture.Width / 2, position.Y - texture.Height / 2);
-        protected Vector2 GetTextureCenter(Texture2D texture, Vector2 position) =>
-            new Vector2(position.X + texture.Width / 2, position.Y + texture.Height / 2);
     }
 }
