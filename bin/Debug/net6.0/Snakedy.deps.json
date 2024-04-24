@@ -11,10 +11,22 @@
           "MonoGame.Content.Builder.Task": "3.8.1.303",
           "MonoGame.Extended": "3.8.0",
           "MonoGame.Extended.Collisions": "3.8.0",
-          "MonoGame.Framework.DesktopGL": "3.8.1.303"
+          "MonoGame.Framework.DesktopGL": "3.8.1.303",
+          "Genbox.VelcroPhysics.MonoGame": "0.1.0-alpha.2"
         },
         "runtime": {
           "Snakedy.dll": {}
+        }
+      },
+      "Genbox.VelcroPhysics.MonoGame/0.1.0-alpha.2": {
+        "dependencies": {
+          "MonoGame.Framework.DesktopGL": "3.8.1.303"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Genbox.VelcroPhysics.MonoGame.dll": {
+            "assemblyVersion": "0.1.0.0",
+            "fileVersion": "0.1.0.0"
+          }
         }
       },
       "MonoGame.Content.Builder.Task/3.8.1.303": {},
@@ -105,6 +117,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Genbox.VelcroPhysics.MonoGame/0.1.0-alpha.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-w483dt6JsjhWNIdHD1m5arHl/Fhi2/fsqVz6eKgpY0dhJt3EQukgguN0mSIHF/GMo0jvLBV+qP8I7d8DtZZEjg==",
+      "path": "genbox.velcrophysics.monogame/0.1.0-alpha.2",
+      "hashPath": "genbox.velcrophysics.monogame.0.1.0-alpha.2.nupkg.sha512"
     },
     "MonoGame.Content.Builder.Task/3.8.1.303": {
       "type": "package",

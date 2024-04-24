@@ -13,7 +13,7 @@ using MonoGame.Extended.Collisions;
 
 namespace Snakedy
 {
-    public class Character : ICollisionActor
+    public class Character : IObstacle
     {
         public Texture2D Texture;
         public SoundEffect HitSound;
@@ -21,7 +21,14 @@ namespace Snakedy
         public Vector2 Position;
         public float HitForce;
 
-        public double Angle = 0;
+        public double angle = 0;
+        public double Angle 
+        { 
+            get { return angle;} 
+            set { angle = value; }
+            //set { angle = value / Math.Abs(value) * (Math.Abs(value) % Math.PI); }
+        }
+
         public float Velocity = 0;
         public Vector2 Force = Vector2.Zero;
         Vector2 HitDirection;
@@ -35,7 +42,7 @@ namespace Snakedy
         public ICollisionActor CollidedWith { get; private set; }
         public double CollidedTo { get; private set; }
 
-        public Character(Vector2 position, float hitForce = 0.008f,float collisionSize = 20f)
+        public Character(Vector2 position, float hitForce = 0.008f,float collisionSize = 20f)//35
         {
             Position = position;
             HitForce = hitForce;
@@ -95,26 +102,27 @@ namespace Snakedy
 
         public void OnCollision(CollisionEventArgs collisionInfo)
         {
+            if (collisionInfo.Other is Collider) return;
             if (CollidedWith != collisionInfo.Other)
             {
-                CalculateCollision(collisionInfo);
+                CalculateCollision(collisionInfo.PenetrationVector,Angle);
                 CollidedWith = collisionInfo.Other;
             }
             else
             {
-                Vector2 dir = new Vector2((float)Math.Cos(CollidedTo), (float)Math.Sin(CollidedTo));
-                Position += dir*10;
-                //Console.WriteLine('Same collision');
+                //Vector2 dir = new Vector2((float)Math.Cos(CollidedTo), (float)Math.Sin(CollidedTo));
+                //Position += dir*10;
+                //Console.WriteLine("Same collision");
             }
         }
 
-        public void CalculateCollision(CollisionEventArgs collisionInfo)
+        public void CalculateCollision(Vector2 penetrVec,double ballAngle)
         {
-            var n = collisionInfo.PenetrationVector;
-            var surface = new Vector2(n.Y, -n.X);
+            var surface = new Vector2(penetrVec.Y, -penetrVec.X);
             //Console.WriteLine("ANGLE:"+Angle.ToString() + " ");
-            var surfAngle = (Math.Atan2(surface.Y, surface.X) + Math.PI) % Math.PI;
-            Angle = surfAngle + surfAngle - Angle;
+            //Console.WriteLine("SURFACE:"+surface.ToString() + " ");
+            var surfAngle = (Math.Atan2(surface.Y, surface.X));// + Math.PI) % Math.PI;
+            Angle = surfAngle + surfAngle - ballAngle;
             CollidedTo = Angle;
         }
 

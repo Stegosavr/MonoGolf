@@ -2,6 +2,18 @@
   "version": 3,
   "targets": {
     "net6.0": {
+      "Genbox.VelcroPhysics.MonoGame/0.1.0-alpha.2": {
+        "type": "package",
+        "dependencies": {
+          "MonoGame.Framework.DesktopGL": "3.8.0.1641"
+        },
+        "compile": {
+          "lib/netstandard2.0/Genbox.VelcroPhysics.MonoGame.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Genbox.VelcroPhysics.MonoGame.dll": {}
+        }
+      },
       "MonoGame.Content.Builder.Task/3.8.1.303": {
         "type": "package",
         "build": {
@@ -153,6 +165,19 @@
     }
   },
   "libraries": {
+    "Genbox.VelcroPhysics.MonoGame/0.1.0-alpha.2": {
+      "sha512": "w483dt6JsjhWNIdHD1m5arHl/Fhi2/fsqVz6eKgpY0dhJt3EQukgguN0mSIHF/GMo0jvLBV+qP8I7d8DtZZEjg==",
+      "type": "package",
+      "path": "genbox.velcrophysics.monogame/0.1.0-alpha.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "genbox.velcrophysics.monogame.0.1.0-alpha.2.nupkg.sha512",
+        "genbox.velcrophysics.monogame.nuspec",
+        "lib/netstandard2.0/Genbox.VelcroPhysics.MonoGame.dll",
+        "lib/netstandard2.0/Genbox.VelcroPhysics.MonoGame.xml"
+      ]
+    },
     "MonoGame.Content.Builder.Task/3.8.1.303": {
       "sha512": "9Ilzzje62LhWElbPNEl7vh7XsRSbze+lvCJdZtTZUGu48FRgvYN6THURwIB9PN98EI33/Wnf6iuShNUtD7hL4Q==",
       "type": "package",
@@ -274,7 +299,8 @@
       "MonoGame.Content.Builder.Task >= 3.8.1.303",
       "MonoGame.Extended >= 3.8.0",
       "MonoGame.Extended.Collisions >= 3.8.0",
-      "MonoGame.Framework.DesktopGL >= 3.8.1.303"
+      "MonoGame.Framework.DesktopGL >= 3.8.1.303",
+      "genbox.velcrophysics.monogame >= 0.1.0-alpha.2"
     ]
   },
   "packageFolders": {
@@ -298,6 +324,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "D:\\Packages": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -331,6 +358,10 @@
           "MonoGame.Framework.DesktopGL": {
             "target": "Package",
             "version": "[3.8.1.303, )"
+          },
+          "genbox.velcrophysics.monogame": {
+            "target": "Package",
+            "version": "[0.1.0-alpha.2, )"
           }
         },
         "imports": [
