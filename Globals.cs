@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Collisions;
 
 namespace Snakedy
@@ -20,6 +21,7 @@ namespace Snakedy
 
         public static GameTime GameTime;
         public static CollisionComponent CollisionComponent;
+        public static SpriteBatch SpriteBatch;
 
         public static int Score;
 

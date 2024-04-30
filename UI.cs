@@ -12,6 +12,9 @@ namespace Snakedy
     public class UI
     {
         public SpriteFont Font;
+        public SpriteFont BigFont;
+
+        static Vector2 TimerPosition = new Vector2(Globals.ScreenWidth / 2, 50);
         public UI()
         {
         }
@@ -21,7 +24,7 @@ namespace Snakedy
 
         }
 
-        public void Draw(SpriteBatch spriteBatch,string str,bool isTime = true)
+        public void DrawTimer(string str,bool isTime = true)
         {
             string text = "";
             if (isTime)
@@ -32,8 +35,20 @@ namespace Snakedy
             }
             else
                 text = str;
+            Draw(text,TimerPosition, Color.White);
+        }
+
+        public void Draw(string text,Vector2 position,Color color,float size = 1)
+        {
             Vector2 strDims = Font.MeasureString(text);
-            spriteBatch.DrawString(Font, text, new Vector2(100,30),Color.White);
+            //strDims.
+            position.X -= (strDims.X/2) * size;
+            Globals.SpriteBatch.DrawString(Font, text, position, color,0,Vector2.Zero,size,SpriteEffects.None,0);
+        }
+
+        public async void DrawGameOver()
+        {
+            //W
         }
     }
 }

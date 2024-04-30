@@ -20,6 +20,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Arial16.spritefont
 
+#begin Sounds/collision.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/collision.wav
+
 #begin Sounds/hit.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

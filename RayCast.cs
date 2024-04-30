@@ -53,7 +53,7 @@ namespace Snakedy
             if (collisionInfo.Other == CollidedWith) return;
             PenetrationVector = collisionInfo.PenetrationVector;
             Collided = true;
-            Console.WriteLine("Ray collided");
+           //Console.WriteLine("Ray collided");
             CollidedWith = collisionInfo.Other;
         }
     }
@@ -130,6 +130,12 @@ namespace Snakedy
         {
             foreach (var col in Colliders)
                 comp.Insert(col);
+        }
+
+        public void DeleteCollisions()
+        {
+            foreach (var col in Colliders)
+                Globals.CollisionComponent.Remove(col);
         }
 
         //public void OnCollision(CollisionEventArgs collisionInfo)

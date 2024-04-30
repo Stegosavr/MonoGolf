@@ -15,27 +15,29 @@ namespace Snakedy
         public Vector2 Position
         {
             get { return Bounds.Position; }
-            set { Bounds.Position = value; }
+            set { Bounds.Position = value; AreaBounds.Position = value; }
         }
         public IShapeF Bounds { get; }
+        public IShapeF AreaBounds { get; }
 
-        List<Obstacle> Spawned;
+        List<IObstacle> Spawned;
 
         public Hole(Vector2 position = new Vector2())
         {
             Bounds = new CircleF(position, 37);
+            AreaBounds = new CircleF(position, 57);
             SpawnHole();
             if (Position != Vector2.Zero)
             {
                 Bounds.Position = position;
                 Position = position;
             }
-            Spawned = new List<Obstacle>();
+            Spawned = new List<IObstacle>();
         }
 
         public void SpawnHole()
         {
-            Position = Obstacle.GetRandomPositionNotIntersecting(Bounds, Globals.Obstacles.Select(o=>o.Bounds));
+            Position = Obstacles.GetRandomPositionNotIntersecting(Bounds, Globals.Obstacles.Select(o=>o.Bounds));
         }
 
         public bool Check(Vector2 ballPosition)
@@ -46,15 +48,21 @@ namespace Snakedy
             return false;
         }
 
+        public void DespawnObstacles()
+        {
+            Obstacles.RemoveObstacles(Spawned);
+            Spawned.Clear();
+        }
+
         public void Update(Vector2 ballPosition,Timer timer)
         {
             if (Check(ballPosition))
             {
                 Globals.Ball.Velocity = 0.001f;
 
-                Obstacle.RemoveObstacles(Spawned);
-                Spawned = Obstacle.CreateRandomRectangles(5,new List<IShapeF>() { Bounds});
-
+                Obstacles.RemoveObstacles(Spawned);
+                Spawned = Obstacles.CreateRandomObstacles(5,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
+                Spawned = Spawned.Concat(PitObstacle.CreateRandomPool(9,new List<IShapeF>() { AreaBounds })).ToList();
 
                 SpawnHole();
                 timer.AddTime(timer.DelayTime);

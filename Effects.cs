@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Shapes;
@@ -27,7 +28,7 @@ namespace Snakedy
             //_spriteBatch.DrawLine(from, ballPosition, color, 10);
 
             int count = (int)dist / 53 + 1;
-            var center = Functions.GetTextureCenter(ArrowTexture);
+            var center = Functions.GetTextureCenter(ArrowTexture.Bounds);
             var angle = Math.Atan2(force.Y, force.X) + Math.PI / 2;
             for (int i = 1; i <= count; i++)
             {

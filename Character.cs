@@ -29,6 +29,8 @@ namespace Snakedy
             //set { angle = value / Math.Abs(value) * (Math.Abs(value) % Math.PI); }
         }
 
+        float DeltaSize = 35;
+
         public float Velocity = 0;
         public Vector2 Force = Vector2.Zero;
         Vector2 HitDirection;
@@ -42,11 +44,12 @@ namespace Snakedy
         public ICollisionActor CollidedWith { get; private set; }
         public double CollidedTo { get; private set; }
 
-        public Character(Vector2 position, float hitForce = 0.008f,float collisionSize = 20f)//35
+        public Character(Vector2 position, float hitForce = 0.008f,float collisionSize = 20f)//20
         {
             Position = position;
             HitForce = hitForce;
             Bounds = new CircleF(position, collisionSize);
+            DeltaSize = DeltaSize / collisionSize;
         }
 
         public void Move(GameTime gameTime)
@@ -96,7 +99,7 @@ namespace Snakedy
                 CollidedWith = null;
 
                 Moving = true;
-                HitSound.Play();
+                HitEffect();
             }
         }
 
@@ -107,6 +110,9 @@ namespace Snakedy
             {
                 CalculateCollision(collisionInfo.PenetrationVector,Angle);
                 CollidedWith = collisionInfo.Other;
+
+                Velocity *= 0.95f;
+                SoundEffects.CollisionSound(Velocity);
             }
             else
             {
@@ -126,11 +132,33 @@ namespace Snakedy
             CollidedTo = Angle;
         }
 
+        public void Reset()
+        {
+            Position = new Vector2(Globals.ScreenWidth/2,Globals.ScreenHeight/2);
+            Velocity = 0f;
+            Moving = false;
+        }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Red, 3f);
+            var offset = Functions.OffsetTexture(new RectangleF(Position.X,Position.Y,Texture.Width/DeltaSize,Texture.Height/DeltaSize), Position);
+            var destination = new Rectangle((int)offset.X , (int)offset.Y, (int)(Texture.Width / DeltaSize), (int)(Texture.Height / DeltaSize));
+            spriteBatch.Draw(Texture, destination, Color.White);
+
             if (Holding)
                 Effects.DrawArrow(HitDirection, Position);
+        }
+
+        private void HitEffect()
+        {
+            var a = HitSound.CreateInstance();
+            a.Pitch =(float)Globals.Random.NextDouble()*0.4f-0.2f;
+            a.Play();
+        }
+
+        public void DrawCollision(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Black, 3f);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 
 namespace Snakedy
 {
@@ -22,10 +23,10 @@ namespace Snakedy
             return vector;
         }
 
-        public static Vector2 GetTextureCenter(Texture2D texture) =>
+        public static Vector2 GetTextureCenter(RectangleF texture) =>
             new Vector2(texture.Width / 2, texture.Height / 2);
 
-        public static Vector2 OffsetTexture(Texture2D texture, Vector2 position) =>
+        public static Vector2 OffsetTexture(RectangleF texture, Vector2 position) =>
             position - GetTextureCenter(texture);
         //public static Vector2 GetTextureCenter(Texture2D texture, Vector2 position) =>
         //new Vector2(position.X + texture.Width / 2, position.Y + texture.Height / 2);

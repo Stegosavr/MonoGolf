@@ -17,8 +17,8 @@ namespace Snakedy
         RayCast RayCast;
         Control BallControl;
 
-        Obstacle Block;
-        Obstacle Block2;
+        RectangleObstacle Block;
+        RectangleObstacle Block2;
 
         Hole Hole;
 
@@ -34,9 +34,10 @@ namespace Snakedy
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private readonly CollisionComponent _collisionComponent;
+        private  CollisionComponent _collisionComponent;
 
-        public Obstacle[] Borders { get; private set; }
+        public RectangleObstacle[] Borders { get; private set; }
+        bool gameOver = false;
 
         public Game1()
         {
@@ -46,8 +47,6 @@ namespace Snakedy
             Globals.ScreenHeight = _graphics.PreferredBackBufferHeight;
 
             //_collisionComponent = new CollisionComponent(new RectangleF(0, 0, screenWidth, screenHeight));
-            _collisionComponent = new CollisionComponent(new RectangleF(0-100, 0-100, Globals.ScreenWidth + 100, Globals.ScreenHeight + 100));
-            Globals.CollisionComponent = _collisionComponent;
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -56,10 +55,13 @@ namespace Snakedy
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _collisionComponent = new CollisionComponent(new RectangleF(0 - 100, 0 - 100, Globals.ScreenWidth + 100, Globals.ScreenHeight + 100));
+            Globals.CollisionComponent = _collisionComponent;
+
             Globals.Obstacles = new List<IObstacle>();
 
             Ball = new Character(new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2));
-            RayCast = new RayCast(Ball, 10);
+            RayCast = new RayCast(Ball, 20);
 
             Hole = new Hole();
 
@@ -67,13 +69,14 @@ namespace Snakedy
 
 
 
-            //Block = new Obstacle(new RectangleF(new Point2(40, 40), new Size2(200, 100)));
+            //Block = new RectangleObstacle(new RectangleF(new Point2(40, 40), new Size2(200, 100)));
             //_collisionComponent.Insert(Block);
-            //Block2 = new Obstacle(new RectangleF(new Point2(40, 40), new Size2(100, 200)));
+            //Block2 = new RectangleObstacle(new RectangleF(new Point2(40, 186), new Size2(200, 100)));
             //_collisionComponent.Insert(Block2);
 
-            _collisionComponent.Insert(Ball);
+            //_collisionComponent.Insert(Ball);
             SetBoundsCollisions(_collisionComponent);
+            _collisionComponent.Insert(Ball);
             RayCast.SetCollisions(_collisionComponent);
 
             Globals.Ball = Ball;
@@ -93,6 +96,7 @@ namespace Snakedy
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            Globals.SpriteBatch = _spriteBatch;
             Effects.Setup(_spriteBatch);
 
             // TODO: use this.Content to load your game content here
@@ -104,7 +108,10 @@ namespace Snakedy
             soundEffect = Content.Load<SoundEffect>("Sounds/hit");
             Ball.HitSound = soundEffect;
 
+            SoundEffects.soundCollision = Content.Load<SoundEffect>("Sounds/collision");
+
             UI.Font = Content.Load<SpriteFont>("Fonts/Arial16");
+            //UI.BigFont = Content.Load<SpriteFont>("Fonts/Arial16");
 
         }
 
@@ -114,11 +121,19 @@ namespace Snakedy
                 Exit();
             if (!this.IsActive)
                 return;
+            if (gameOver)
+            {
+                var mState = Mouse.GetState();
+                if (mState.LeftButton == ButtonState.Pressed)
+                    WaitGameOver();
+                //base.Update(gameTime);
+                return;
+            }
 
             // TODO: Add your update logic here
             Globals.GameTime = gameTime;
 
-            Timer.Wait(gameTime,GameOver);
+            Timer.Wait(gameTime, () => { GameOver(); }); ;
 
             //ball.Position += ballControl.MoveOnArrowsInput(gameTime) * ball.Speed;
             Ball.PreparingHit(BallControl.HandleMousePress());
@@ -150,29 +165,38 @@ namespace Snakedy
         protected override void Draw(GameTime gameTime)
         {
             if (!this.IsActive) return;
+            if (gameOver)
+            {
+                _spriteBatch.Begin();
+                UI.Draw("GAME OVER",new Vector2(Globals.ScreenWidth/2,200),Color.Red,2);
+                UI.Draw("Score - "+Globals.Score, new Vector2(Globals.ScreenWidth / 2, 250), Color.White, 2);
+
+                _spriteBatch.End();
+                return;
+            }
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
             _spriteBatch.Draw(Wallpaper, new Rectangle(0, 0, Globals.ScreenWidth, Globals.ScreenHeight), Color.White);
-            _spriteBatch.Draw(Ball.Texture, Functions.OffsetTexture(Ball.Texture, Ball.Position), Color.White);
 
+            //Ball.DrawCollision(_spriteBatch);
             Ball.Draw(_spriteBatch);
-            RayCast.Draw(_spriteBatch);
+            //RayCast.Draw(_spriteBatch);
             Hole.Draw(_spriteBatch);
 
 
 
-            //Block.Draw(_spriteBatch);
-            //Block2.Draw(_spriteBatch);
+            //Block.DrawCollision(_spriteBatch);
+            //Block2.DrawCollision(_spriteBatch);
 
 
 
             foreach (var b in Globals.Obstacles)
-                b.Draw(_spriteBatch);
+                b.DrawCollision(_spriteBatch);
 
-            UI.Draw(_spriteBatch,Timer.TimeLeft.ToString());
+            UI.DrawTimer(Timer.TimeLeft.ToString());
 
             _spriteBatch.End();
 
@@ -181,25 +205,45 @@ namespace Snakedy
 
         public void GameOver()
         {
-            Console.WriteLine("GAME OVER --- SCORE:"+Globals.Score);
+            Console.WriteLine("GAME OVER --- SCORE:" + Globals.Score);
+            gameOver = true;
+        }
+        public void WaitGameOver() 
+        {
+            gameOver = false;
             Globals.Score = 0;
             Timer.TickAt = Globals.GameTime.TotalGameTime.TotalMilliseconds + 3000;
-
+            Hole.DespawnObstacles();
             Hole.SpawnHole();
 
-            //using var game = new Snakedy.Game1();
-            //game.Run();
+            _collisionComponent = new CollisionComponent(new RectangleF(0 - 100, 0 - 100, Globals.ScreenWidth + 100, Globals.ScreenHeight + 100));
+            Globals.CollisionComponent = _collisionComponent;
+
+            _collisionComponent.Insert(Ball);
+            foreach (var e in Globals.Obstacles.Take(4))
+                _collisionComponent.Insert(e);
+
+            RayCast = new RayCast(Ball, 20);
+            RayCast.SetCollisions(_collisionComponent);
+            //RayCast.SetCollisions(_collisionComponent);
+
+            Ball.Reset();
+
+            //Globals.Obstacles = Globals.Obstacles;
+            //Globals.CollisionComponent.GetType();
+            //RayCast.DeleteCollisions();
+            //RayCast = new RayCast(Ball, 20);
         }
 
         void SetBoundsCollisions(CollisionComponent comp)
         {
             int size = 100;
             int shift = 5;
-            Borders = new Obstacle[4];
-            Borders[0] = (new Obstacle(new RectangleF(0, -size + shift, Globals.ScreenWidth, size)));
-            Borders[1] = (new Obstacle(new RectangleF(0, Globals.ScreenHeight - shift, Globals.ScreenWidth, size)));
-            Borders[2] = (new Obstacle(new RectangleF(-size + shift, 0, size, Globals.ScreenHeight)));
-            Borders[3] = (new Obstacle(new RectangleF(Globals.ScreenWidth - shift, 0, size, Globals.ScreenHeight)));
+            Borders = new RectangleObstacle[4];
+            Borders[0] = (new RectangleObstacle(new RectangleF(0, -size + shift, Globals.ScreenWidth, size)));
+            Borders[1] = (new RectangleObstacle(new RectangleF(0, Globals.ScreenHeight - shift, Globals.ScreenWidth, size)));
+            Borders[2] = (new RectangleObstacle(new RectangleF(-size + shift, 0, size, Globals.ScreenHeight)));
+            Borders[3] = (new RectangleObstacle(new RectangleF(Globals.ScreenWidth - shift, 0, size, Globals.ScreenHeight)));
             foreach (var b in Borders)
             {
                 comp.Insert(b);
