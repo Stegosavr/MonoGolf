@@ -61,7 +61,7 @@ namespace Snakedy
             Globals.Obstacles = new List<IObstacle>();
 
             Ball = new Character(new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2));
-            RayCast = new RayCast(Ball, 20);
+            RayCast = new RayCast(Ball, 25);
 
             Hole = new Hole();
 
@@ -223,7 +223,7 @@ namespace Snakedy
             foreach (var e in Globals.Obstacles.Take(4))
                 _collisionComponent.Insert(e);
 
-            RayCast = new RayCast(Ball, 20);
+            RayCast = new RayCast(Ball, 25);
             RayCast.SetCollisions(_collisionComponent);
             //RayCast.SetCollisions(_collisionComponent);
 
