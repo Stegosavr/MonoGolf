@@ -25,6 +25,9 @@ namespace Snakedy
 
         public static int Score;
 
-        public static List<IObstacle> Obstacles;
+        public static List<IObstacle> Obstacles = new List<IObstacle>();
+        public static List<RectangleObstacle> RectanglesDrawable = new List<RectangleObstacle>();
+        public static List<PitObstacle> PitsDrawable = new List<PitObstacle>();
+        public static List<WaterDrop> VisualEffects = new List<WaterDrop>();
     }
 }

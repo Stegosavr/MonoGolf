@@ -29,7 +29,7 @@ namespace Snakedy
             //set { angle = value / Math.Abs(value) * (Math.Abs(value) % Math.PI); }
         }
 
-        float DeltaSize = 35;
+        float DeltaSize = 32;
 
         public float Velocity = 0;
         public Vector2 Force = Vector2.Zero;
@@ -146,7 +146,7 @@ namespace Snakedy
             spriteBatch.Draw(Texture, destination, Color.White);
 
             if (Holding)
-                Effects.DrawArrow(HitDirection, Position);
+                VisualEffects.DrawArrow(HitDirection, Position);
         }
 
         private void HitEffect()

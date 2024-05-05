@@ -34,3 +34,6 @@ D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\arrow.
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Genbox.VelcroPhysics.MonoGame.dll
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Fonts\Arial16.xnb
 D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sounds\collision.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\pound.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sprites\crate.xnb
+D:\Progs\VisualStudio\C#\Snakedy\Snakedy\bin\Debug\net6.0\Content\Sounds\water.xnb

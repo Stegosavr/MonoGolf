@@ -58,7 +58,6 @@ namespace Snakedy
             _collisionComponent = new CollisionComponent(new RectangleF(0 - 100, 0 - 100, Globals.ScreenWidth + 100, Globals.ScreenHeight + 100));
             Globals.CollisionComponent = _collisionComponent;
 
-            Globals.Obstacles = new List<IObstacle>();
 
             Ball = new Character(new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight / 2));
             RayCast = new RayCast(Ball, 25);
@@ -97,15 +96,19 @@ namespace Snakedy
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.SpriteBatch = _spriteBatch;
-            Effects.Setup(_spriteBatch);
 
             // TODO: use this.Content to load your game content here
             Ball.Texture = Content.Load<Texture2D>("Sprites/ball");
             Wallpaper = Content.Load<Texture2D>("Sprites/green");
             Wallpaper2 = Content.Load<Texture2D>("Sprites/xp");
-            Effects.ArrowTexture = Content.Load<Texture2D>("Sprites/arrow");
+            VisualEffects.ArrowTexture = Content.Load<Texture2D>("Sprites/arrow");
+
+            PitObstacle.Texture = Content.Load<Texture2D>("Sprites/pound");
+            RectangleObstacle.Texture = Content.Load<Texture2D>("Sprites/crate");
+
 
             soundEffect = Content.Load<SoundEffect>("Sounds/hit");
+            PitObstacle.DrownSound = Content.Load<SoundEffect>("Sounds/water");
             Ball.HitSound = soundEffect;
 
             SoundEffects.soundCollision = Content.Load<SoundEffect>("Sounds/collision");
@@ -159,6 +162,11 @@ namespace Snakedy
 
             UI.Update();
 
+            for (int i = 0; i < Globals.VisualEffects.Count; i++)
+            {
+                Globals.VisualEffects[i].Update(gameTime);
+            }
+
             base.Update(gameTime);
         }
 
@@ -181,20 +189,21 @@ namespace Snakedy
 
             _spriteBatch.Draw(Wallpaper, new Rectangle(0, 0, Globals.ScreenWidth, Globals.ScreenHeight), Color.White);
 
+
+            DrawCollisions(Globals.Obstacles,_spriteBatch);
+
+            DrawTextures(Globals.PitsDrawable, _spriteBatch);
+            DrawTextures(Globals.RectanglesDrawable, _spriteBatch);
+
+
             //Ball.DrawCollision(_spriteBatch);
             Ball.Draw(_spriteBatch);
             //RayCast.Draw(_spriteBatch);
             Hole.Draw(_spriteBatch);
 
+            foreach (var e in Globals.VisualEffects)
+                e.Draw(_spriteBatch);
 
-
-            //Block.DrawCollision(_spriteBatch);
-            //Block2.DrawCollision(_spriteBatch);
-
-
-
-            foreach (var b in Globals.Obstacles)
-                b.DrawCollision(_spriteBatch);
 
             UI.DrawTimer(Timer.TimeLeft.ToString());
 
@@ -240,15 +249,26 @@ namespace Snakedy
             int size = 100;
             int shift = 5;
             Borders = new RectangleObstacle[4];
-            Borders[0] = (new RectangleObstacle(new RectangleF(0, -size + shift, Globals.ScreenWidth, size)));
-            Borders[1] = (new RectangleObstacle(new RectangleF(0, Globals.ScreenHeight - shift, Globals.ScreenWidth, size)));
-            Borders[2] = (new RectangleObstacle(new RectangleF(-size + shift, 0, size, Globals.ScreenHeight)));
-            Borders[3] = (new RectangleObstacle(new RectangleF(Globals.ScreenWidth - shift, 0, size, Globals.ScreenHeight)));
+            Borders[0] = (new RectangleObstacle(new RectangleF(0, -size + shift, Globals.ScreenWidth, size)) );
+            Borders[1] = (new RectangleObstacle(new RectangleF(0, Globals.ScreenHeight - shift, Globals.ScreenWidth, size)) );
+            Borders[2] = (new RectangleObstacle(new RectangleF(-size + shift, 0, size, Globals.ScreenHeight)) );
+            Borders[3] = (new RectangleObstacle(new RectangleF(Globals.ScreenWidth - shift, 0, size, Globals.ScreenHeight)) );
             foreach (var b in Borders)
             {
                 comp.Insert(b);
                 Globals.Obstacles.Add(b);
             }
+        }
+        private void DrawCollisions(IEnumerable<IObstacle> list,SpriteBatch spriteBatch)
+        {
+            foreach (var obs in list)
+                obs.DrawCollision(spriteBatch);
+        }
+
+        private void DrawTextures(IEnumerable<IDrawable> list, SpriteBatch spriteBatch)
+        {
+            foreach (var obs in list)
+                obs.Draw(spriteBatch);
         }
     }
 }

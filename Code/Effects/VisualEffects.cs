@@ -11,15 +11,10 @@ using MonoGame.Extended.Shapes;
 
 namespace Snakedy
 {
-    public static class Effects
+    public static class VisualEffects
     {
-        static SpriteBatch _spriteBatch;
         public static Texture2D ArrowTexture;
 
-        public static void Setup(SpriteBatch spriteBatch)
-        {
-            _spriteBatch = spriteBatch;
-        }
         public static void DrawArrow(Vector2 force, Vector2 ballPosition)
         {
             var from = ballPosition - force;
@@ -32,9 +27,22 @@ namespace Snakedy
             var angle = Math.Atan2(force.Y, force.X) + Math.PI / 2;
             for (int i = 1; i <= count; i++)
             {
-                var destination = new Rectangle((int)(ballPosition.X-force.X*i/ count), (int)(ballPosition.Y - force.Y * i / count), ArrowTexture.Width / 10 * count + 15, ArrowTexture.Height*count/6 + 5);
-                _spriteBatch.Draw(ArrowTexture, destination, null, color, (float)angle, center, SpriteEffects.None, 0);
+                var destination = new Rectangle((int)(ballPosition.X - force.X * i / count), (int)(ballPosition.Y - force.Y * i / count), ArrowTexture.Width / 10 * count + 15, ArrowTexture.Height * count / 6 + 5);
+                Globals.SpriteBatch.Draw(ArrowTexture, destination, null, color, (float)angle, center, SpriteEffects.None, 0);
             }
         }
+
+        public static void EmitWaterDrops(Vector2 force, Vector2 position)
+        {
+            int dropCount = (int)force.Length();/// 50;
+            for (int i = 0; i < dropCount; i++)
+            {
+                var direction = Obstacles.RandomOffset(6)/20f;
+                var size = Globals.Random.NextInt64(5, 15);
+                var drop = new WaterDrop(position, 50, direction, size);
+            }
+
+        }
+
     }
 }

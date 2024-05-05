@@ -61,8 +61,8 @@ namespace Snakedy
                 Globals.Ball.Velocity = 0.001f;
 
                 Obstacles.RemoveObstacles(Spawned);
-                Spawned = Obstacles.CreateRandomObstacles(5,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
-                Spawned = Spawned.Concat(PitObstacle.CreateRandomPool(9,new List<IShapeF>() { AreaBounds })).ToList();
+                Spawned = Obstacles.CreateRandomObstacles(1,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
+                Spawned = Spawned.Concat(Obstacles.CreateRandomPools(3,7, new List<IShapeF>() { AreaBounds })).ToList();
 
                 SpawnHole();
                 timer.AddTime(timer.DelayTime);
