@@ -15,7 +15,7 @@ namespace Snakedy
     {
         Character Ball;
         RayCast RayCast;
-        Control BallControl;
+        Control Control;
 
         RectangleObstacle Block;
         RectangleObstacle Block2;
@@ -34,14 +34,19 @@ namespace Snakedy
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private  CollisionComponent _collisionComponent;
+        private CollisionComponent _collisionComponent;
+        private ScoreManager _scoreManager;
 
         public RectangleObstacle[] Borders { get; private set; }
-        bool gameOver = false;
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            Globals.GraphicsDeviceManager = _graphics;
+
+            //_graphics.IsFullScreen = true;
+            //_graphics.PreferredBackBufferHeight = 1080;
+            //_graphics.PreferredBackBufferWidth = 1920;
 
             Globals.ScreenWidth = _graphics.PreferredBackBufferWidth;
             Globals.ScreenHeight = _graphics.PreferredBackBufferHeight;
@@ -64,7 +69,7 @@ namespace Snakedy
 
             Hole = new Hole();
 
-            BallControl = new Control();
+            Control = new Control();
 
 
 
@@ -79,14 +84,19 @@ namespace Snakedy
             RayCast.SetCollisions(_collisionComponent);
 
             Globals.Ball = Ball;
+            Globals.Control = Control;
+            Globals.RayCast = RayCast;
             Globals.Obstacles.Add(Ball);
             Globals.Game = this;
 
             UI = new UI();
 
-            Timer = new Timer(3000);
-            Timer.TickAt = 3000;
+            Timer = new Timer(300000);
+            Timer.OnTimeout += () => Ball.OnDeath();
             Hole.SpawnHole();
+
+            Globals.Timer = Timer;
+            Globals.UI = UI;
 
 
             base.Initialize();
@@ -96,6 +106,8 @@ namespace Snakedy
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Globals.SpriteBatch = _spriteBatch;
+            _scoreManager = ScoreManager.Load();
+            //Globals.ScoreManager = _scoreManager;
 
             // TODO: use this.Content to load your game content here
             Ball.Texture = Content.Load<Texture2D>("Sprites/ball");
@@ -105,6 +117,7 @@ namespace Snakedy
 
             PitObstacle.Texture = Content.Load<Texture2D>("Sprites/pound");
             RectangleObstacle.Texture = Content.Load<Texture2D>("Sprites/crate");
+            Particle.Texture = Content.Load<Texture2D>("Sprites/particle");
 
 
             soundEffect = Content.Load<SoundEffect>("Sounds/hit");
@@ -124,48 +137,29 @@ namespace Snakedy
                 Exit();
             if (!this.IsActive)
                 return;
-            if (gameOver)
+            if (Globals.GameOver)
             {
-                var mState = Mouse.GetState();
-                if (mState.LeftButton == ButtonState.Pressed)
-                    WaitGameOver();
-                //base.Update(gameTime);
-                return;
+                GameOverScreen.Update(gameTime);
             }
 
-            // TODO: Add your update logic here
+            var mState = Mouse.GetState();
+            if (mState.RightButton == ButtonState.Pressed)
+                Ball.OnDeath();
+
             Globals.GameTime = gameTime;
 
-            Timer.Wait(gameTime, () => { GameOver(); }); ;
+            // TODO: Add your update logic here
+            Timer.Update(gameTime);
 
             //ball.Position += ballControl.MoveOnArrowsInput(gameTime) * ball.Speed;
-            Ball.PreparingHit(BallControl.HandleMousePress());
 
-            var RayInfo = RayCast.GetRayCastInfo();
-            if (RayInfo != null)
-            {
-                Ball.Position = RayInfo.Item1;
-                Ball.CalculateCollision(RayInfo.Item2,RayCast.PrevAngle);
-                RayCast.Position = Point2.Zero;
-            }
-            RayCast.PrevAngle = Ball.Angle;
-
-            Ball.Move(gameTime);
-            Ball.Position = BallControl.StayInBounds(Ball.Position, new Vector2(Globals.ScreenWidth, Globals.ScreenHeight));
-
-            RayCast.Update(Ball.Position);
-
-
-            Hole.Update(Ball.Position, Timer);
+            Update(Globals.Entities,gameTime);
 
             _collisionComponent.Update(gameTime);
 
             UI.Update();
 
-            for (int i = 0; i < Globals.VisualEffects.Count; i++)
-            {
-                Globals.VisualEffects[i].Update(gameTime);
-            }
+            Update(Globals.VisualEffects,gameTime);
 
             base.Update(gameTime);
         }
@@ -173,15 +167,6 @@ namespace Snakedy
         protected override void Draw(GameTime gameTime)
         {
             if (!this.IsActive) return;
-            if (gameOver)
-            {
-                _spriteBatch.Begin();
-                UI.Draw("GAME OVER",new Vector2(Globals.ScreenWidth/2,200),Color.Red,2);
-                UI.Draw("Score - "+Globals.Score, new Vector2(Globals.ScreenWidth / 2, 250), Color.White, 2);
-
-                _spriteBatch.End();
-                return;
-            }
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
@@ -189,23 +174,19 @@ namespace Snakedy
 
             _spriteBatch.Draw(Wallpaper, new Rectangle(0, 0, Globals.ScreenWidth, Globals.ScreenHeight), Color.White);
 
-
             DrawCollisions(Globals.Obstacles,_spriteBatch);
 
             DrawTextures(Globals.PitsDrawable, _spriteBatch);
             DrawTextures(Globals.RectanglesDrawable, _spriteBatch);
+            DrawTextures(Globals.Entities,_spriteBatch);
+            DrawTextures(Globals.VisualEffects,_spriteBatch);
 
+            if (Globals.GameOver)
+            {
+                GameOverScreen.Draw(_spriteBatch);
+            }
 
-            //Ball.DrawCollision(_spriteBatch);
-            Ball.Draw(_spriteBatch);
-            //RayCast.Draw(_spriteBatch);
-            Hole.Draw(_spriteBatch);
-
-            foreach (var e in Globals.VisualEffects)
-                e.Draw(_spriteBatch);
-
-
-            UI.DrawTimer(Timer.TimeLeft.ToString());
+            UI.DrawTimer(Timer.TimeLeftSeconds);
 
             _spriteBatch.End();
 
@@ -215,14 +196,21 @@ namespace Snakedy
         public void GameOver()
         {
             Console.WriteLine("GAME OVER --- SCORE:" + Globals.Score);
-            gameOver = true;
+            Globals.GameOver = true;
+            Globals.Control.GetActualState();
+
+            _scoreManager.Add(new Score() { PlayerName = "Grigory",Value = Globals.Score});
+            ScoreManager.Save(_scoreManager);
+            //_scoreManager.EditLatestScore("Editted");
+            //ScoreManager.Save(_scoreManager);
         }
-        public void WaitGameOver() 
+        public void ResetGame() 
         {
-            gameOver = false;
+            Globals.GameOver = false;
             Globals.Score = 0;
-            Timer.TickAt = Globals.GameTime.TotalGameTime.TotalMilliseconds + 3000;
+            Timer.Reset();
             Hole.DespawnObstacles();
+            Globals.VisualEffects.Clear();
             Hole.SpawnHole();
 
             _collisionComponent = new CollisionComponent(new RectangleF(0 - 100, 0 - 100, Globals.ScreenWidth + 100, Globals.ScreenHeight + 100));
@@ -233,6 +221,7 @@ namespace Snakedy
                 _collisionComponent.Insert(e);
 
             RayCast = new RayCast(Ball, 25);
+            Globals.RayCast = RayCast;
             RayCast.SetCollisions(_collisionComponent);
             //RayCast.SetCollisions(_collisionComponent);
 
@@ -259,16 +248,24 @@ namespace Snakedy
                 Globals.Obstacles.Add(b);
             }
         }
-        private void DrawCollisions(IEnumerable<IObstacle> list,SpriteBatch spriteBatch)
+        private void DrawCollisions(List<IObstacle> list,SpriteBatch spriteBatch)
         {
-            foreach (var obs in list)
-                obs.DrawCollision(spriteBatch);
+            for (int i = 0; i < list.Count; i++)
+                list[i].DrawCollision(spriteBatch);
         }
 
-        private void DrawTextures(IEnumerable<IDrawable> list, SpriteBatch spriteBatch)
+        private void DrawTextures(List<IDrawable> list, SpriteBatch spriteBatch)
         {
-            foreach (var obs in list)
-                obs.Draw(spriteBatch);
+            for (int i = 0; i < list.Count; i++)
+                list[i].Draw(spriteBatch);
+        }
+
+        private void DrawTextures(List<IEntity> list, SpriteBatch spriteBatch) => DrawTextures(list.Select(e => (IDrawable)e).ToList(), spriteBatch);
+        
+        private void Update(List<IEntity> list, GameTime gameTime)
+        {
+            for (int i = 0; i < list.Count; i++)
+                list[i].Update(gameTime);
         }
     }
 }

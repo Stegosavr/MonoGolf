@@ -13,6 +13,13 @@ namespace Snakedy
         //Vector2 objectPos;
         //float objectSpeed;
         ButtonState PrevMouseState = ButtonState.Released;
+        bool PrevHoldState = false;
+        bool HoldingBefore = false;
+
+        public void GetActualState()
+        {
+            HoldingBefore = HandleMouseHold();
+        }
 
         public Vector2 MoveOnArrowsInput(GameTime gameTime)
         {
@@ -39,25 +46,56 @@ namespace Snakedy
             return direction;
         }
 
-        public bool HandleMousePress()
+        public bool HandleMouseHold()
         {
             var mState = Mouse.GetState();
-            var holdind = false;
+            var holding = false;
 
             //if (Mouse.)
 
             if (mState.LeftButton == ButtonState.Pressed)
             {
-                holdind = true;
+                holding = true;
             }
             if (mState.LeftButton == ButtonState.Released && PrevMouseState == ButtonState.Pressed)
             {
-                holdind = false;
+                holding = false;
             }
 
             PrevMouseState = mState.LeftButton;
 
-            return holdind;
+            return holding;
+        }
+
+        public bool HandleMouseClick()
+        {
+            var mState = Mouse.GetState();
+            var clicked = false;
+            var holding = HandleMouseHold();
+
+
+            //if (PrevHoldState == true && holding == false && !HoldingBefore)
+            //{
+            //    clicked = true;
+            //}
+            //else
+            //{
+            //    clicked = false;
+            //}
+
+            if (holding && !HoldingBefore)
+            {
+                clicked = true;
+            }
+            else
+            {
+                clicked = false;
+            }
+
+            if (HoldingBefore && !holding)
+                HoldingBefore = false;
+
+            return clicked;
         }
 
         public Vector2 StayInBounds(Vector2 objectPos, Vector2 bounds,Character ball = null)

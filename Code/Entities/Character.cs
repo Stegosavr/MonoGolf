@@ -13,7 +13,7 @@ using MonoGame.Extended.Collisions;
 
 namespace Snakedy
 {
-    public class Character : IObstacle
+    public class Character : IObstacle,IEntity
     {
         public Texture2D Texture;
         public SoundEffect HitSound;
@@ -50,9 +50,29 @@ namespace Snakedy
             HitForce = hitForce;
             Bounds = new CircleF(position, collisionSize);
             DeltaSize = DeltaSize / collisionSize;
+            Globals.Entities.Add(this);
         }
 
-        public void Move(GameTime gameTime)
+        public void Update(GameTime gameTime)
+        {
+            PreparingHit(Globals.Control.HandleMouseHold());
+
+            var RayInfo = Globals.RayCast.GetRayCastInfo();
+            if (RayInfo != null)
+            {
+                Position = RayInfo.Item1;
+                CalculateCollision(RayInfo.Item2, Globals.RayCast.PrevAngle);
+                Globals.RayCast.Position = Point2.Zero;
+            }
+            Globals.RayCast.PrevAngle = Angle;
+
+            Move(gameTime);
+            Position = Globals.Control.StayInBounds(Position, new Vector2(Globals.ScreenWidth, Globals.ScreenHeight));
+
+            Globals.RayCast.Update(Position);
+        }
+
+        private void Move(GameTime gameTime)
         {
             Vector2 dir = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle));
             Force = dir * Velocity;
@@ -68,9 +88,9 @@ namespace Snakedy
 
             Bounds.Position = Position;
 
-            var kState = Keyboard.GetState();
-            if (kState.IsKeyDown(Keys.Space))
-                Collided = false;
+            //var kState = Keyboard.GetState();
+            //if (kState.IsKeyDown(Keys.Space))
+            //    Collided = false;
         }
 
         public void PreparingHit(bool pressed) 
@@ -132,11 +152,20 @@ namespace Snakedy
             CollidedTo = Angle;
         }
 
+        public void OnDeath()
+        {
+            Globals.Entities.Remove(this);
+            Globals.CollisionComponent.Remove(this);
+            Globals.RayCast.DeleteCollisions();
+            Globals.Game.GameOver();
+        }
+
         public void Reset()
         {
             Position = new Vector2(Globals.ScreenWidth/2,Globals.ScreenHeight/2);
             Velocity = 0f;
             Moving = false;
+            Globals.Entities.Add(this);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -158,7 +187,7 @@ namespace Snakedy
 
         public void DrawCollision(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Black, 3f);
+            //spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Black, 3f);
         }
     }
 }

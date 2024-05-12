@@ -13,6 +13,10 @@ namespace Snakedy
     {
         public static Game1 Game;
         public static Character Ball;
+        public static RayCast RayCast;
+        public static Timer Timer;
+        public static Control Control;
+        public static UI UI;
 
         public static int ScreenWidth;
         public static int ScreenHeight;
@@ -22,12 +26,18 @@ namespace Snakedy
         public static GameTime GameTime;
         public static CollisionComponent CollisionComponent;
         public static SpriteBatch SpriteBatch;
+        public static GraphicsDeviceManager GraphicsDeviceManager;
 
+        public static string PlayerName = "Player";
+        public static bool GameOver = false;
         public static int Score;
+        public static List<Score> Scores;
+
 
         public static List<IObstacle> Obstacles = new List<IObstacle>();
-        public static List<RectangleObstacle> RectanglesDrawable = new List<RectangleObstacle>();
-        public static List<PitObstacle> PitsDrawable = new List<PitObstacle>();
-        public static List<WaterDrop> VisualEffects = new List<WaterDrop>();
+        public static List<IEntity> Entities = new List<IEntity>();
+        public static List<IDrawable> RectanglesDrawable = new List<IDrawable>();
+        public static List<IDrawable> PitsDrawable = new List<IDrawable>();
+        public static List<IEntity> VisualEffects = new List<IEntity>();
     }
 }

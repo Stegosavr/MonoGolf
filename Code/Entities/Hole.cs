@@ -10,7 +10,7 @@ using MonoGame.Extended.Collisions;
 
 namespace Snakedy
 {
-    public class Hole 
+    public class Hole : IEntity
     {
         public Vector2 Position
         {
@@ -33,6 +33,7 @@ namespace Snakedy
                 Position = position;
             }
             Spawned = new List<IObstacle>();
+            Globals.Entities.Add(this);
         }
 
         public void SpawnHole()
@@ -54,18 +55,18 @@ namespace Snakedy
             Spawned.Clear();
         }
 
-        public void Update(Vector2 ballPosition,Timer timer)
+        public void Update(GameTime gameTime)
         {
-            if (Check(ballPosition))
+            if (Check(Globals.Ball.Position))
             {
                 Globals.Ball.Velocity = 0.001f;
 
                 Obstacles.RemoveObstacles(Spawned);
-                Spawned = Obstacles.CreateRandomObstacles(1,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
-                Spawned = Spawned.Concat(Obstacles.CreateRandomPools(3,7, new List<IShapeF>() { AreaBounds })).ToList();
+                Spawned = Obstacles.CreateRandomObstacles(3,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
+                Spawned = Spawned.Concat(Obstacles.CreateRandomPools(0,7, new List<IShapeF>() { AreaBounds })).ToList();
 
                 SpawnHole();
-                timer.AddTime(timer.DelayTime);
+                Globals.Timer.AddTime();
                 Console.WriteLine("Score: " + ++Globals.Score);
             }
         }

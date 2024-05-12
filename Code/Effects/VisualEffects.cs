@@ -32,14 +32,15 @@ namespace Snakedy
             }
         }
 
-        public static void EmitWaterDrops(Vector2 force, Vector2 position)
+        public static void EmitParticles(Vector2 force, Vector2 position,int minCount,int maxCount,int minSize,int MaxSize)
         {
-            int dropCount = (int)force.Length();/// 50;
+            int dropCount = Globals.Random.Next(minCount, maxCount);//(int)(force.Length()*5);/// 50;
             for (int i = 0; i < dropCount; i++)
             {
-                var direction = Obstacles.RandomOffset(6)/20f;
-                var size = Globals.Random.NextInt64(5, 15);
-                var drop = new WaterDrop(position, 50, direction, size);
+                var direction = Obstacles.RandomOffset(6)/80f;//20f
+                direction += force;
+                var size = Globals.Random.Next(minSize, MaxSize);
+                var drop = new Particle(position, 50, direction, size,0.8, Color.SkyBlue,true);
             }
 
         }

@@ -9,31 +9,39 @@ namespace Snakedy
 {
     public class Timer
     {
-        public double TickAt = 0.0;
-        public double DelayTime = 0.0;
+        private double _delayTime;
+        private double _timeLeft;
+        public event Action OnTimeout;
+        public string TimeLeftSeconds { get { return (_timeLeft/1000).ToString(); } }
 
-        public double TimeLeft 
-        { 
-            get { return TickAt/1000 - Globals.GameTime.TotalGameTime.TotalSeconds; }
+        public Timer(double delayTimeMilliseconds)
+        {
+            _delayTime = delayTimeMilliseconds;
+            _timeLeft = delayTimeMilliseconds;
         }
 
-        public Timer(double DelayTime)
+        public void Reset()
         {
-            this.DelayTime = DelayTime;
+            _timeLeft = _delayTime;
         }
 
-        public void Wait(GameTime gameTime, Action Action)
+        public void Update(GameTime gameTime)
         {
-            if (TickAt <= gameTime.TotalGameTime.TotalMilliseconds)
+            if (Globals.GameOver)
             {
-                TickAt = gameTime.TotalGameTime.TotalMilliseconds + DelayTime;
-                Action.Invoke();
+                return;
             }
+            if (_timeLeft <= 0)
+            {
+                //_timeLeft = _delayTime;
+                OnTimeout.Invoke();
+            }
+            _timeLeft -= gameTime.ElapsedGameTime.TotalMilliseconds;
         }
 
-        public void AddTime(double milliseconds)
+        public void AddTime()
         {
-            TickAt += milliseconds;
+            _timeLeft += _delayTime;
         }
     }
 }

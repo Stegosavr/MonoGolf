@@ -38,7 +38,7 @@ namespace Snakedy
             //throw new NotImplementedException();
         }
 
-        public void Draw(SpriteBatch spriteBatch) => Drawable.Draw(spriteBatch, Functions.GetTextureCenter((RectangleF)Bounds)+Bounds.Position, Texture, ((RectangleF)Bounds).Width);
+        public void Draw(SpriteBatch spriteBatch) => Drawable.Draw(spriteBatch, Functions.GetTextureCenter((RectangleF)Bounds)+Bounds.Position, Texture, ((RectangleF)Bounds).Width,Color.White);
 
     }
 }

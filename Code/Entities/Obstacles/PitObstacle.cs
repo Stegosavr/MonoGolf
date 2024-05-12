@@ -54,15 +54,19 @@ namespace Snakedy
             spriteBatch.DrawCircle((CircleF)Bounds, 50, Color.Blue, 50);
         }
 
-        public void Draw(SpriteBatch spriteBatch) => Drawable.Draw(spriteBatch, Bounds.Position, Texture, ((CircleF)Bounds).Diameter+35);
+        public void Draw(SpriteBatch spriteBatch) => Drawable.Draw(spriteBatch, Bounds.Position, Texture, ((CircleF)Bounds).Diameter+35,Color.White);
 
         public void OnCollision(CollisionEventArgs collisionInfo)
         {
             if (collisionInfo.Other is Character)
             {
-                //Globals.CollisionComponent.Remove(collisionInfo.Other);
                 DrownSound.Play();
-                VisualEffects.EmitWaterDrops(new Vector2(10, 10), collisionInfo.Other.Bounds.Position);
+                VisualEffects.EmitParticles(Globals.Ball.Force / 8, collisionInfo.Other.Bounds.Position,9,14,8,15);
+                VisualEffects.EmitParticles(Globals.Ball.Force / 16, collisionInfo.Other.Bounds.Position, 3, 5, 8, 15);
+                VisualEffects.EmitParticles(Vector2.Zero, collisionInfo.Other.Bounds.Position, 3,5,8,15);
+
+                Globals.Ball.OnDeath();
+
                 //Globals.Game.GameOver();
             }
         }
