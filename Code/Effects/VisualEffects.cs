@@ -32,15 +32,15 @@ namespace Snakedy
             }
         }
 
-        public static void EmitParticles(Vector2 force, Vector2 position,int minCount,int maxCount,int minSize,int MaxSize)
+        public static void EmitParticles(Vector2 force, Vector2 position,int minCount,int maxCount,int minSize,int MaxSize,Color color,float friction)
         {
             int dropCount = Globals.Random.Next(minCount, maxCount);//(int)(force.Length()*5);/// 50;
             for (int i = 0; i < dropCount; i++)
             {
-                var direction = Obstacles.RandomOffset(6)/80f;//20f
+                var direction = Obstacles.RandomOffset(6)/friction;//20f
                 direction += force;
                 var size = Globals.Random.Next(minSize, MaxSize);
-                var drop = new Particle(position, 50, direction, size,0.8, Color.SkyBlue,true);
+                var drop = new Particle(position, 50, direction, size,0.8, color,true);
             }
 
         }

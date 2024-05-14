@@ -20,6 +20,8 @@ namespace Snakedy
         public IShapeF Bounds { get; }
         public IShapeF AreaBounds { get; }
 
+        public static Texture2D Texture;
+
         List<IObstacle> Spawned;
 
         public Hole(Vector2 position = new Vector2())
@@ -63,7 +65,7 @@ namespace Snakedy
 
                 Obstacles.RemoveObstacles(Spawned);
                 Spawned = Obstacles.CreateRandomObstacles(3,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
-                Spawned = Spawned.Concat(Obstacles.CreateRandomPools(0,7, new List<IShapeF>() { AreaBounds })).ToList();
+                Spawned = Spawned.Concat(Obstacles.CreateRandomPools(2,7, new List<IShapeF>() { AreaBounds })).ToList();
 
                 SpawnHole();
                 Globals.Timer.AddTime();
@@ -73,7 +75,10 @@ namespace Snakedy
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Black, 37f);
+            //spriteBatch.DrawCircle((CircleF)Bounds, 16, Color.Black, 37f);
+            spriteBatch.Draw(Texture, Functions.OffsetTexture( Texture.Bounds,Position), Color.White);
+            if (Globals.Random.NextDouble() > 0.9)
+            VisualEffects.EmitParticles(Vector2.Zero, Position, 1, 1, 1, 2,Color.Yellow,260);
         }
 
     }

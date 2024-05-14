@@ -24,13 +24,13 @@ namespace Snakedy
         private static void DrawScoreList()
         {
             var scoreList = Globals.Scores.Select(s=>s.PlayerName+" :"+s.Value+"\n");
-            Globals.UI.Draw(String.Join("",scoreList), new Vector2(Globals.ScreenWidth * 0.8f, Globals.ScreenHeight/2), Color.White, 1);
+            Globals.UI.Draw(String.Join("",scoreList), new Vector2(Globals.ScreenWidth / 2, Globals.ScreenHeight/2 - 50), Color.White, 1);
         }
 
         public static void DrawScore()
         {
-            Globals.UI.Draw("GAME OVER", new Vector2(Globals.ScreenWidth / 2, 200), Color.Red, 2);
-            Globals.UI.Draw("Score - " + Globals.Score, new Vector2(Globals.ScreenWidth / 2, 250), Color.White, 2);
+            //Globals.UI.Draw("GAME OVER", new Vector2(Globals.ScreenWidth / 2, 200), Color.Red, 2);
+            Globals.UI.Draw("Score - " + Globals.Score, new Vector2(Globals.ScreenWidth / 2, 150), Color.White, 1);
         }
     }
 }

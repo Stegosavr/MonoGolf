@@ -91,7 +91,7 @@ namespace Snakedy
 
             UI = new UI();
 
-            Timer = new Timer(300000);
+            Timer = new Timer(3000);
             Timer.OnTimeout += () => Ball.OnDeath();
             Hole.SpawnHole();
 
@@ -111,6 +111,7 @@ namespace Snakedy
 
             // TODO: use this.Content to load your game content here
             Ball.Texture = Content.Load<Texture2D>("Sprites/ball");
+            Hole.Texture = Content.Load<Texture2D>("Sprites/flag");
             Wallpaper = Content.Load<Texture2D>("Sprites/green");
             Wallpaper2 = Content.Load<Texture2D>("Sprites/xp");
             VisualEffects.ArrowTexture = Content.Load<Texture2D>("Sprites/arrow");
@@ -174,7 +175,7 @@ namespace Snakedy
 
             _spriteBatch.Draw(Wallpaper, new Rectangle(0, 0, Globals.ScreenWidth, Globals.ScreenHeight), Color.White);
 
-            DrawCollisions(Globals.Obstacles,_spriteBatch);
+            //DrawCollisions(Globals.Obstacles,_spriteBatch);
 
             DrawTextures(Globals.PitsDrawable, _spriteBatch);
             DrawTextures(Globals.RectanglesDrawable, _spriteBatch);
@@ -186,7 +187,8 @@ namespace Snakedy
                 GameOverScreen.Draw(_spriteBatch);
             }
 
-            UI.DrawTimer(Timer.TimeLeftSeconds);
+            if (!Globals.GameOver)
+                UI.DrawTimer(Timer.TimeLeftSeconds);
 
             _spriteBatch.End();
 
@@ -199,7 +201,7 @@ namespace Snakedy
             Globals.GameOver = true;
             Globals.Control.GetActualState();
 
-            _scoreManager.Add(new Score() { PlayerName = "Grigory",Value = Globals.Score});
+            _scoreManager.Add(new Score() { PlayerName = "You",Value = Globals.Score});
             ScoreManager.Save(_scoreManager);
             //_scoreManager.EditLatestScore("Editted");
             //ScoreManager.Save(_scoreManager);

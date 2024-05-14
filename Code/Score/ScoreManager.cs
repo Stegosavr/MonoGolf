@@ -12,13 +12,19 @@ namespace Snakedy
     {
         private static string _scoresFileName = "scores.xml";
         private static string _latestScoreFileName = "latest score.xml";
+        private static List<Score> _defaultScores = new List<Score>()
+        {
+            new Score() { PlayerName = "Bob", Value = 20},
+            new Score() { PlayerName = "Mike", Value = 100},
+            new Score() { PlayerName = "Jacob", Value = 300}
+        };
 
         public Score LatestScore { get; private set; }
         public List<Score> Scores { get; private set; }
         public List<Score> Highscores { get; private set; }
 
         public ScoreManager() : 
-            this(new List<Score>())
+            this(_defaultScores)
         {
 
         }
@@ -41,7 +47,7 @@ namespace Snakedy
 
             Scores = Scores
                 .OrderByDescending(score=>score.Value)
-                .DistinctBy(score=>score.PlayerName+score.Value)
+                .DistinctBy(score=>score.PlayerName)//+score.Value)
                 .ToList();
 
             UpdateHighscores();

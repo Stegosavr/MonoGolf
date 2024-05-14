@@ -61,9 +61,9 @@ namespace Snakedy
             if (collisionInfo.Other is Character)
             {
                 DrownSound.Play();
-                VisualEffects.EmitParticles(Globals.Ball.Force / 8, collisionInfo.Other.Bounds.Position,9,14,8,15);
-                VisualEffects.EmitParticles(Globals.Ball.Force / 16, collisionInfo.Other.Bounds.Position, 3, 5, 8, 15);
-                VisualEffects.EmitParticles(Vector2.Zero, collisionInfo.Other.Bounds.Position, 3,5,8,15);
+                VisualEffects.EmitParticles(Globals.Ball.Force / 8, collisionInfo.Other.Bounds.Position,9,14,8,15,Color.SkyBlue,80);
+                VisualEffects.EmitParticles(Globals.Ball.Force / 16, collisionInfo.Other.Bounds.Position, 3, 5, 8, 15, Color.SkyBlue,80);
+                VisualEffects.EmitParticles(Vector2.Zero, collisionInfo.Other.Bounds.Position, 3,5,8,15, Color.SkyBlue,80);
 
                 Globals.Ball.OnDeath();
 
