@@ -20,6 +20,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Arial16.spritefont
 
+#begin Sounds/Arc_De_Soleil_-_Swirly_Bird.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Arc_De_Soleil_-_Swirly_Bird.mp3
+
 #begin Sounds/collision.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

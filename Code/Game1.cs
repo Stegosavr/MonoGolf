@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
 
@@ -31,6 +32,7 @@ namespace Snakedy
         Texture2D Wallpaper2;
 
         SoundEffect soundEffect;
+        Song backgroundMusic;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -44,14 +46,13 @@ namespace Snakedy
             _graphics = new GraphicsDeviceManager(this);
             Globals.GraphicsDeviceManager = _graphics;
 
+
             //_graphics.IsFullScreen = true;
             //_graphics.PreferredBackBufferHeight = 1080;
             //_graphics.PreferredBackBufferWidth = 1920;
 
             Globals.ScreenWidth = _graphics.PreferredBackBufferWidth;
             Globals.ScreenHeight = _graphics.PreferredBackBufferHeight;
-
-            //_collisionComponent = new CollisionComponent(new RectangleF(0, 0, screenWidth, screenHeight));
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -72,13 +73,6 @@ namespace Snakedy
             Control = new Control();
 
 
-
-            //Block = new RectangleObstacle(new RectangleF(new Point2(40, 40), new Size2(200, 100)));
-            //_collisionComponent.Insert(Block);
-            //Block2 = new RectangleObstacle(new RectangleF(new Point2(40, 186), new Size2(200, 100)));
-            //_collisionComponent.Insert(Block2);
-
-            //_collisionComponent.Insert(Ball);
             SetBoundsCollisions(_collisionComponent);
             _collisionComponent.Insert(Ball);
             RayCast.SetCollisions(_collisionComponent);
@@ -123,14 +117,30 @@ namespace Snakedy
 
             soundEffect = Content.Load<SoundEffect>("Sounds/hit");
             PitObstacle.DrownSound = Content.Load<SoundEffect>("Sounds/water");
+            backgroundMusic = Content.Load<Song>("Sounds/Arc_De_Soleil_-_Swirly_Bird");
             Ball.HitSound = soundEffect;
 
             SoundEffects.soundCollision = Content.Load<SoundEffect>("Sounds/collision");
+            MediaPlayer.Volume = 0.025f;
+
+            MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.MediaStateChanged += MediaPlayerMediaStateChanged;
+
+
 
             UI.Font = Content.Load<SpriteFont>("Fonts/Arial16");
             //UI.BigFont = Content.Load<SpriteFont>("Fonts/Arial16");
 
         }
+
+        void MediaPlayerMediaStateChanged(object sender, System.EventArgs e)
+        {
+            MediaPlayer.Volume = 0.025f;
+            MediaPlayer.Play(backgroundMusic);
+        }
+
+
 
         protected override void Update(GameTime gameTime)
         {
@@ -143,6 +153,7 @@ namespace Snakedy
                 GameOverScreen.Update(gameTime);
             }
 
+            
             var mState = Mouse.GetState();
             if (mState.RightButton == ButtonState.Pressed)
                 Ball.OnDeath();

@@ -14,7 +14,8 @@ namespace Snakedy
         private static string _latestScoreFileName = "latest score.xml";
         private static List<Score> _defaultScores = new List<Score>()
         {
-            new Score() { PlayerName = "Bob", Value = 20},
+            new Score() { PlayerName = "Bob", Value = 10},
+            new Score() { PlayerName = "Tim", Value = 30},
             new Score() { PlayerName = "Mike", Value = 100},
             new Score() { PlayerName = "Jacob", Value = 300}
         };
