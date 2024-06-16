@@ -56,6 +56,7 @@ namespace Snakedy
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            //_graphics.IsFullScreen = true;
         }
 
         protected override void Initialize()
@@ -116,6 +117,7 @@ namespace Snakedy
 
 
             soundEffect = Content.Load<SoundEffect>("Sounds/hit");
+            Hole.WinSound = Content.Load<SoundEffect>("Sounds/win");
             PitObstacle.DrownSound = Content.Load<SoundEffect>("Sounds/water");
             backgroundMusic = Content.Load<Song>("Sounds/Arc_De_Soleil_-_Swirly_Bird");
             Ball.HitSound = soundEffect;
@@ -153,7 +155,7 @@ namespace Snakedy
                 GameOverScreen.Update(gameTime);
             }
 
-            
+
             var mState = Mouse.GetState();
             if (mState.RightButton == ButtonState.Pressed)
                 Ball.OnDeath();
@@ -165,13 +167,13 @@ namespace Snakedy
 
             //ball.Position += ballControl.MoveOnArrowsInput(gameTime) * ball.Speed;
 
-            Update(Globals.Entities,gameTime);
+            Update(Globals.Entities, gameTime);
 
             _collisionComponent.Update(gameTime);
 
             UI.Update();
 
-            Update(Globals.VisualEffects,gameTime);
+            Update(Globals.VisualEffects, gameTime);
 
             base.Update(gameTime);
         }
@@ -190,8 +192,8 @@ namespace Snakedy
 
             DrawTextures(Globals.PitsDrawable, _spriteBatch);
             DrawTextures(Globals.RectanglesDrawable, _spriteBatch);
-            DrawTextures(Globals.Entities,_spriteBatch);
-            DrawTextures(Globals.VisualEffects,_spriteBatch);
+            DrawTextures(Globals.Entities, _spriteBatch);
+            DrawTextures(Globals.VisualEffects, _spriteBatch);
 
             if (Globals.GameOver)
             {
@@ -212,12 +214,12 @@ namespace Snakedy
             Globals.GameOver = true;
             Globals.Control.GetActualState();
 
-            _scoreManager.Add(new Score() { PlayerName = "You",Value = Globals.Score});
+            _scoreManager.Add(new Score() { PlayerName = "You", Value = Globals.Score });
             ScoreManager.Save(_scoreManager);
             //_scoreManager.EditLatestScore("Editted");
             //ScoreManager.Save(_scoreManager);
         }
-        public void ResetGame() 
+        public void ResetGame()
         {
             Globals.GameOver = false;
             Globals.Score = 0;
@@ -251,17 +253,17 @@ namespace Snakedy
             int size = 100;
             int shift = 5;
             Borders = new RectangleObstacle[4];
-            Borders[0] = (new RectangleObstacle(new RectangleF(0, -size + shift, Globals.ScreenWidth, size)) );
-            Borders[1] = (new RectangleObstacle(new RectangleF(0, Globals.ScreenHeight - shift, Globals.ScreenWidth, size)) );
-            Borders[2] = (new RectangleObstacle(new RectangleF(-size + shift, 0, size, Globals.ScreenHeight)) );
-            Borders[3] = (new RectangleObstacle(new RectangleF(Globals.ScreenWidth - shift, 0, size, Globals.ScreenHeight)) );
+            Borders[0] = (new RectangleObstacle(new RectangleF(0, -size + shift, Globals.ScreenWidth, size)));
+            Borders[1] = (new RectangleObstacle(new RectangleF(0, Globals.ScreenHeight - shift, Globals.ScreenWidth, size)));
+            Borders[2] = (new RectangleObstacle(new RectangleF(-size + shift, 0, size, Globals.ScreenHeight)));
+            Borders[3] = (new RectangleObstacle(new RectangleF(Globals.ScreenWidth - shift, 0, size, Globals.ScreenHeight)));
             foreach (var b in Borders)
             {
                 comp.Insert(b);
                 Globals.Obstacles.Add(b);
             }
         }
-        private void DrawCollisions(List<IObstacle> list,SpriteBatch spriteBatch)
+        private void DrawCollisions(List<IObstacle> list, SpriteBatch spriteBatch)
         {
             for (int i = 0; i < list.Count; i++)
                 list[i].DrawCollision(spriteBatch);
@@ -274,11 +276,25 @@ namespace Snakedy
         }
 
         private void DrawTextures(List<IEntity> list, SpriteBatch spriteBatch) => DrawTextures(list.Select(e => (IDrawable)e).ToList(), spriteBatch);
-        
+
         private void Update(List<IEntity> list, GameTime gameTime)
         {
             for (int i = 0; i < list.Count; i++)
                 list[i].Update(gameTime);
+        }
+
+        private void SwitchResolution()
+        {
+            if (_graphics.PreferredBackBufferHeight == 480)
+            {
+                _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+                _graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            }
+            else
+            {
+                _graphics.PreferredBackBufferHeight = 480;
+                _graphics.PreferredBackBufferWidth = 800;
+            }
         }
     }
 }

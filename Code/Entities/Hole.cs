@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
@@ -21,6 +22,7 @@ namespace Snakedy
         public IShapeF AreaBounds { get; }
 
         public static Texture2D Texture;
+        public static SoundEffect WinSound;
 
         List<IObstacle> Spawned;
 
@@ -67,10 +69,21 @@ namespace Snakedy
                 Spawned = Obstacles.CreateRandomObstacles(3,(obs)=>RectangleObstacle.CreateRandomRectangle(obs),new List<IShapeF>() { AreaBounds});
                 Spawned = Spawned.Concat(Obstacles.CreateRandomPools(2,7, new List<IShapeF>() { AreaBounds })).ToList();
 
+                WinEffect();
+
                 SpawnHole();
                 Globals.Timer.AddTime();
                 Console.WriteLine("Score: " + ++Globals.Score);
             }
+        }
+
+        private void WinEffect()
+        {
+            var a = WinSound.CreateInstance();
+            a.Volume -= 0.3f;
+            a.Pitch = (float)Globals.Random.NextDouble() * 0.4f - 0.2f;
+            a.Play();
+            VisualEffects.EmitParticles(Vector2.Zero, Position, 15, 20, 10, 15, Color.White, 10);
         }
 
         public void Draw(SpriteBatch spriteBatch)

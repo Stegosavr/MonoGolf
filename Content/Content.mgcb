@@ -44,6 +44,12 @@
 /processorParam:Quality=Best
 /build:Sounds/water.wav
 
+#begin Sounds/win.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/win.wav
+
 #begin Sprites/arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
