@@ -38,24 +38,33 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Restore tools (temp)
-        run: dotnet restore
-      - name: Print Folder Tree (temp)
-        uses: jaywcjlove/github-action-folder-tree@main
-        with:
-          exclude: "node_modules|dist|.git|.husky"
-          path: /home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001
-      - name: Replace single file (temp)
-        uses: richardrigutins/replace-in-files@v2
-        with:
-          files: '/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets'
-          search-text: 'Tools'
-          replacement-text: 'tools'
-      - name: "Read file contentsc(temp)"
-        uses: andstor/file-reader-action@v1
-        with:
-          path: "/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets"
-
+      # - name: Restore tools (temp)
+      #   run: dotnet restore
+      # - name: Print Folder Tree (temp)
+      #   uses: jaywcjlove/github-action-folder-tree@main
+      #   with:
+      #     exclude: "node_modules|dist|.git|.husky"
+      #     path: /home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001
+      # - name: Replace single file (temp)
+      #   uses: richardrigutins/replace-in-files@v2
+      #   with:
+      #     files: '/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets'
+      #     search-text: 'Tools'
+      #     replacement-text: 'tools'
+      # - name: "Read file contentsc(temp)"
+      #   uses: andstor/file-reader-action@v1
+      #   with:
+      #     path: "/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets"
+      - name: d1 tools (temp)
+        run: dotnet tool uninstall -g dotnet-mgcb
+      - name: d2 tools (temp)
+        run: dotnet tool uninstall -g dotnet-mgcb-editor
+      - name: d3 tools (temp)
+        run: dotnet tool uninstall -g dotnet-mgcb-editor-windows
+      - name: d4 tools (temp)
+        run: dotnet tool uninstall -g dotnet-mgcb-editor-mac
+      - name: d5 tools (temp)
+        run: dotnet tool uninstall -g dotnet-mgcb-editor-linux
           
       - name: Publish .NET Core Project
         run: dotnet publish MonoGolf.csproj -c Release -o release --nologo
