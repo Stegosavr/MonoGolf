@@ -38,12 +38,11 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: mgcb (temp)
-        run: dotnet add package nkast.Xna.Framework.Content.Pipeline --version 3.13.9001
+      # - name: mgcb (temp)
+      #   run: dotnet add package nkast.Xna.Framework.Content.Pipeline --version 3.13.9001
       - name: Ensure MGCB is present
-        run: |
-          ls /home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/Tools/
-          export MGCB_PATH=/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/Tools/MGCB.exe
+        run:
+          export MGCB_PATH=/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/tools/MGCB.exe
       # - name: Restore tools (temp)
       #   run: dotnet restore
       # - name: Print Folder Tree (temp)
