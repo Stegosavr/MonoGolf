@@ -38,6 +38,8 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: mgcb (temp)
+        run: dotnet add package nkast.Xna.Framework.Content.Pipeline --version 3.14.9001
       # - name: Restore tools (temp)
       #   run: dotnet restore
       # - name: Print Folder Tree (temp)
@@ -55,16 +57,7 @@ jobs:
       #   uses: andstor/file-reader-action@v1
       #   with:
       #     path: "/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets"
-      - name: d1 tools (temp)
-        run: dotnet tool uninstall -g dotnet-mgcb
-      - name: d2 tools (temp)
-        run: dotnet tool uninstall -g dotnet-mgcb-editor
-      - name: d3 tools (temp)
-        run: dotnet tool uninstall -g dotnet-mgcb-editor-windows
-      - name: d4 tools (temp)
-        run: dotnet tool uninstall -g dotnet-mgcb-editor-mac
-      - name: d5 tools (temp)
-        run: dotnet tool uninstall -g dotnet-mgcb-editor-linux
+
           
       - name: Publish .NET Core Project
         run: dotnet publish MonoGolf.csproj -c Release -o release --nologo
