@@ -65,7 +65,8 @@ namespace Snakedy
                 VisualEffects.EmitParticles(Globals.Ball.Force / 16, collisionInfo.Other.Bounds.Position, 3, 5, 8, 15, Color.SkyBlue,80);
                 VisualEffects.EmitParticles(Vector2.Zero, collisionInfo.Other.Bounds.Position, 3,5,8,15, Color.SkyBlue,80);
 
-                Globals.Ball.OnDeath();
+                //Globals.Ball.OnDeath();
+                Globals.Game.Dead = true;
 
                 //Globals.Game.GameOver();
             }

@@ -13,17 +13,17 @@ namespace Snakedy
     public class Collider : ICollisionActor
     {
         public IShapeF Bounds { get; }
-        public Point2 Position
+        public Vector2 Position
         {
             get { return Bounds.Position; }
             set { Bounds.Position = value; }
         }
-        //Point2 PrevPos;
+        //Vector2 PrevPos;
         public Vector2 PenetrationVector;
         public bool Collided = false;
         ICollisionActor CollidedWith = null;
 
-        public Collider(Point2 position, IShapeF bounds)
+        public Collider(Vector2 position, IShapeF bounds)
         {
             Bounds = bounds;
             Position = position;
@@ -66,7 +66,7 @@ namespace Snakedy
         public Character Ball;
         public double PrevAngle;
         public IShapeF Bounds { get; }
-        public Point2 Position
+        public Vector2 Position
         {
             get { return Bounds.Position; }
             set { Bounds.Position = value; }
@@ -105,13 +105,13 @@ namespace Snakedy
 
         public void Update(Vector2 currentPos)
         {
-            if (Position == Point2.Zero) 
+            if (Position == Vector2.Zero) 
             {
                 foreach (var col in Colliders)
                     col.ResetCollision();
                 Position = currentPos; 
             }
-            Point2 step = ((Point2)currentPos - Position) /(UpdateCount+1);
+            Vector2 step = ((Vector2)currentPos - Position) /(UpdateCount+1);
             for (int i = 1; i < UpdateCount+1; i++)
             {
                 Colliders[i-1].Position = Position + (Vector2)step * i;

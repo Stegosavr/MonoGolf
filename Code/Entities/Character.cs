@@ -62,7 +62,7 @@ namespace Snakedy
             {
                 Position = RayInfo.Item1;
                 CalculateCollision(RayInfo.Item2, Globals.RayCast.PrevAngle);
-                Globals.RayCast.Position = Point2.Zero;
+                Globals.RayCast.Position = Vector2.Zero;
             }
             Globals.RayCast.PrevAngle = Angle;
 

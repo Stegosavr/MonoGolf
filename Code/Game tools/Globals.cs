@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Collisions;
+using MonoGolf;
 
 namespace Snakedy
 {
     public static class Globals
     {
-        public static Game1 Game;
+        public static MonoGolfGame Game;
         public static Character Ball;
         public static RayCast RayCast;
         public static Timer Timer;

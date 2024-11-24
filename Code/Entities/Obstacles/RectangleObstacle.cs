@@ -22,7 +22,7 @@ namespace Snakedy
 
         public static RectangleObstacle CreateRandomRectangle(IEnumerable<IShapeF> obstacles)
         {
-            var obstacle = new RectangleObstacle(new RectangleF(Vector2.Zero, new Size2(100, 100)));
+            var obstacle = new RectangleObstacle(new RectangleF(Vector2.Zero, new Vector2(100, 100)));
             obstacle.Bounds.Position = Obstacles.GetRandomPositionNotIntersecting(obstacle.Bounds, obstacles);
             Globals.RectanglesDrawable.Add(obstacle);
             return obstacle;
