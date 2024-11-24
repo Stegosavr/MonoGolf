@@ -39,7 +39,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: mgcb (temp)
-        run: dotnet add package nkast.Xna.Framework.Content.Pipeline --version 3.14.9001
+        run: dotnet add package nkast.Xna.Framework.Content.Pipeline --version 3.13.9001
       # - name: Restore tools (temp)
       #   run: dotnet restore
       # - name: Print Folder Tree (temp)
@@ -47,12 +47,12 @@ jobs:
       #   with:
       #     exclude: "node_modules|dist|.git|.husky"
       #     path: /home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001
-      - name: Replace single file (temp)
-        uses: richardrigutins/replace-in-files@v2
-        with:
-          files: '/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets'
-          search-text: 'Tools'
-          replacement-text: 'tools'
+      # - name: Replace single file (temp)
+      #   uses: richardrigutins/replace-in-files@v2
+      #   with:
+      #     files: '/home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001/build/nkast.Xna.Framework.Content.Pipeline.Builder.targets'
+      #     search-text: 'Tools'
+      #     replacement-text: 'tools'
       # - name: "Read file contentsc(temp)"
       #   uses: andstor/file-reader-action@v1
       #   with:
