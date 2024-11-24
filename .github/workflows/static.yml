@@ -37,6 +37,16 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
+
+      - name: Restore tools (temp)
+        run: dotnet restore
+      - name: Print Folder Tree (temp)
+        uses: jaywcjlove/github-action-folder-tree@main
+        with:
+          exclude: "node_modules|dist|.git|.husky"
+          path: /home/runner/.nuget/packages/nkast.xna.framework.content.pipeline.builder/3.14.9001
+
+          
       - name: Publish .NET Core Project
         run: dotnet publish MonoGolf.csproj -c Release -o release --nologo
       - name: Upload artifact
